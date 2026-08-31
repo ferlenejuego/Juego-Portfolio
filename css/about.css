@@ -1,0 +1,251 @@
+/* ============ ABOUT ============ */
+.about-content {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    grid-template-areas:
+        "text scene";
+    gap: 50px;
+    align-items: center;
+}
+
+/* ============ DECORATIVE ACCENTS ============ */
+.about-accent {
+    position: absolute;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.about-accent-dash {
+    top: -12px;
+    right: 8%;
+    width: 90px;
+    height: 2px;
+    background-image: linear-gradient(90deg, var(--light-blue) 50%, transparent 50%);
+    background-size: 12px 2px;
+    background-repeat: repeat-x;
+    opacity: 0.5;
+    transform: rotate(-8deg);
+}
+
+.about-accent-diamond {
+    top: -6px;
+    left: 5%;
+    width: 12px;
+    height: 12px;
+    border: 1px solid var(--light-blue);
+    transform: rotate(45deg);
+    opacity: 0.6;
+}
+
+.about-accent-ring {
+    bottom: 4%;
+    left: -2%;
+    width: 26px;
+    height: 26px;
+    border: 1px solid rgba(109, 180, 255, 0.6);
+    border-radius: 50%;
+    opacity: 0.5;
+}
+
+.about-accent-ring2 {
+    top: 30%;
+    right: -3%;
+    width: 40px;
+    height: 40px;
+    border: 1px dashed rgba(109, 180, 255, 0.5);
+    border-radius: 50%;
+    opacity: 0.4;
+}
+
+.about-accent-plus {
+    bottom: 10%;
+    right: 12%;
+    width: 14px;
+    height: 14px;
+    position: absolute;
+    opacity: 0.55;
+}
+
+.about-accent-plus::before,
+.about-accent-plus::after {
+    content: "";
+    position: absolute;
+    background: var(--light-blue);
+}
+
+.about-accent-plus::before {
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 1px;
+}
+
+.about-accent-plus::after {
+    left: 50%;
+    top: 0;
+    height: 100%;
+    width: 1px;
+}
+
+.about-text {
+    grid-area: text;
+}
+
+.about-3d {
+    grid-area: scene;
+    justify-self: center;
+    align-self: center;
+    position: relative;
+    width: 190px;
+    height: 190px;
+}
+
+.about-3d::before {
+    content: "";
+    position: absolute;
+    inset: -30px;
+    border: 1px solid rgba(109, 180, 255, 0.45);
+    border-radius: 50%;
+}
+
+.about-orbit {
+    position: absolute;
+    inset: -52px;
+    border: 1px solid rgba(109, 180, 255, 0.28);
+    border-radius: 50%;
+    animation: orbitSpin 18s linear infinite;
+}
+
+.about-orbit-2 {
+    inset: -72px;
+    border-style: dashed;
+    opacity: 0.5;
+    animation-direction: reverse;
+    animation-duration: 26s;
+}
+
+.about-orbit::after {
+    content: "";
+    position: absolute;
+    top: -3px;
+    left: 50%;
+    width: 6px;
+    height: 6px;
+    background: var(--light-blue);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--blue-2);
+}
+
+@keyframes orbitSpin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+
+.about-photo {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    overflow: hidden;
+    background: linear-gradient(160deg, var(--navy-3), var(--navy-2));
+    border: 2px solid rgba(109, 180, 255, 0.4);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.about-photo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.about-photo:not(:has(img[src])) .about-photo-img {
+    display: none;
+}
+
+.about-photo-ico {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--light-blue);
+    font-size: 56px;
+    opacity: 0.6;
+}
+
+.about-photo:not(:has(img[src])) .about-photo-ico {
+    display: flex;
+}
+
+.about-photo:has(img[src]) .about-photo-ico {
+    display: none;
+}
+
+.about-glow {
+    position: absolute;
+    inset: -40px;
+    background: radial-gradient(circle, rgba(47, 139, 245, 0.35), transparent 70%);
+    filter: blur(20px);
+    z-index: -1;
+    animation: glowPulse 3s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+    0%, 100% { opacity: 0.5; transform: scale(1); }
+    50%      { opacity: 1;   transform: scale(1.15); }
+}
+
+.about-text p {
+    font-size: 17px;
+    color: var(--text);
+    margin-bottom: 14px;
+}
+
+.about-intro {
+    font-size: 21px !important;
+    color: var(--white) !important;
+    font-weight: 500;
+}
+
+.about-intro strong {
+    color: var(--light-blue);
+}
+
+/* ============ ABOUT CHIPS ============ */
+.about-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 22px;
+}
+
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(19, 42, 77, 0.7);
+    border: 1px solid rgba(109, 180, 255, 0.25);
+    border-radius: 30px;
+    padding: 7px 14px;
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 500;
+    transition: border-color 0.2s, color 0.2s, transform 0.2s;
+}
+
+.chip:hover {
+    border-color: rgba(109, 180, 255, 0.6);
+    color: var(--white);
+    transform: translateY(-2px);
+}
+
+.chip-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--light-blue);
+    box-shadow: 0 0 8px var(--blue-2);
+}

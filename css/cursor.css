@@ -1,0 +1,31 @@
+@media (pointer: fine) {
+    .cursor-dot {
+        display: block;
+        position: fixed;
+        width: 8px;
+        height: 8px;
+        background: var(--light-blue);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9999;
+        transform: translate(-50%, -50%);
+    }
+    .cursor-ring {
+        display: block;
+        position: fixed;
+        width: 36px;
+        height: 36px;
+        border: 2px solid var(--light-blue);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9998;
+        transform: translate(-50%, -50%);
+        transition: all 0.15s ease;
+    }
+    .cursor-ring.hover {
+        width: 60px;
+        height: 60px;
+        background: rgba(47, 139, 245, 0.1);
+        border-color: transparent;
+    }
+}
