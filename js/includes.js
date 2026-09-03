@@ -44,8 +44,5 @@ function initPortfolio() {
     if (window.initHome) {
         window.initHome();
     }
-    if (window.initUpload) {
-        window.initUpload();
-    }
 }
 window.initPortfolio = initPortfolio;

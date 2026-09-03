@@ -51,9 +51,6 @@ function initMain() {
     });
 
     window.addEventListener('keydown', function(e) {
-        if (window.pdfModal && window.pdfModal.classList.contains('open')) {
-            return;
-        }
         const index = slideIds.indexOf(currentSlide);
         if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === 'PageDown') {
             if (index < slideIds.length - 1) {

@@ -95,13 +95,4 @@
         align-items: flex-start;
         gap: 12px;
     }
-
-    .upload-grid {
-        flex-direction: column;
-    }
-
-    .up-more {
-        width: 100%;
-        min-height: 110px;
-    }
 }

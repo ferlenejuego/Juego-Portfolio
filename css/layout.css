@@ -191,6 +191,70 @@
     border-radius: 2px;
 }
 
+/* ============ SECTION HEADER (files) ============ */
+.up-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 20px;
+    margin-bottom: 28px;
+}
+
+.up-header-text {
+    min-width: 0;
+}
+
+.up-title {
+    font-size: clamp(30px, 4vw, 44px);
+    font-weight: 700;
+    color: var(--white);
+    margin: 8px 0 6px;
+}
+
+.up-sub {
+    color: var(--text);
+    font-size: 15px;
+}
+
+/* ============ FILE LIST ============ */
+.file-list {
+    display: grid;
+    gap: 12px;
+}
+
+.file-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--navy-2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 18px;
+    color: var(--white);
+    text-decoration: none;
+    transition: border-color 0.2s, transform 0.2s, background 0.2s;
+}
+
+.file-item:hover {
+    border-color: var(--light-blue);
+    background: var(--navy-3);
+    transform: translateX(4px);
+}
+
+.file-icon {
+    font-size: 22px;
+    color: var(--light-blue);
+    flex-shrink: 0;
+}
+
+.file-name {
+    font-size: 15px;
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 /* ============ FOOTER ============ */
 .footer {
     position: static;
