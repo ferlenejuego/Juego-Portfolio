@@ -2,7 +2,8 @@
 #home {
     align-items: center;
     background: var(--navy);
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .hero-bg {

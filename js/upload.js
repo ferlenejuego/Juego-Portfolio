@@ -36,34 +36,39 @@ function fileIconClass(type) {
     return 'ti-file';
 }
 
-function openPdf(name, url, type) {
+function openStaticFile(filePath, fileName) {
+    const modal = document.getElementById('pdfModal');
+    const modalBody = document.getElementById('modal-body');
     const titleEl = document.getElementById('pdfTitle');
-    const frame = document.getElementById('pdfFrame');
-    const img = document.getElementById('fileImg');
-    const openLink = document.getElementById('pdfOpen');
-    titleEl.textContent = name;
-    openLink.href = url;
-    if (isImageType(type)) {
-        frame.style.display = 'none';
-        img.style.display = 'block';
-        img.src = url;
+    titleEl.textContent = fileName;
+
+    const ext = fileName.split('.').pop().toLowerCase();
+
+    modalBody.innerHTML = '';
+
+    if (['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp'].indexOf(ext) !== -1) {
+        modalBody.innerHTML = '<img src="' + filePath + '" alt="' + fileName + '" class="modal-img">';
+    } else if (ext === 'pdf') {
+        modalBody.innerHTML = '<iframe src="' + filePath + '" class="modal-frame" title="' + fileName + '"></iframe>';
     } else {
-        img.style.display = 'none';
-        frame.style.display = 'block';
-        frame.src = url;
+        modalBody.innerHTML =
+            '<div class="modal-fallback">' +
+                '<p>Preview not available for this file type.</p>' +
+                '<a href="' + filePath + '" download class="view-btn">Download ' + fileName + '</a>' +
+            '</div>';
     }
-    pdfModal.classList.add('open');
+
+    modal.classList.add('open');
 }
 
 function closePdf() {
     pdfModal.classList.remove('open');
     setTimeout(function() {
-        document.getElementById('pdfFrame').src = '';
-        document.getElementById('fileImg').src = '';
+        document.getElementById('modal-body').innerHTML = '';
     }, 300);
 }
 
-window.openPdf = openPdf;
+window.openStaticFile = openStaticFile;
 window.closePdf = closePdf;
 
 function initUpload() {
@@ -71,6 +76,49 @@ function initUpload() {
     window.pdfModal = pdfModal;
 
     const pendingFiles = {};
+    const STORAGE_KEY = 'juegoUploads';
+
+    function persistFiles() {
+        const out = {};
+        for (const key in pendingFiles) {
+            out[key] = (pendingFiles[key] || []).map(function(item) {
+                return { name: item.name, type: item.type, data: item.data };
+            });
+        }
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(out));
+        } catch (e) {
+            console.warn('Storage full: ' + e.message);
+        }
+    }
+
+    function loadPersistedFiles() {
+        let stored = null;
+        try {
+            stored = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        } catch (e) {
+            stored = null;
+        }
+        if (!stored) {
+            return;
+        }
+        for (const key in stored) {
+            pendingFiles[key] = (stored[key] || []).map(function(item) {
+                const bin = atob(item.data);
+                const bytes = new Uint8Array(bin.length);
+                for (let i = 0; i < bin.length; i++) {
+                    bytes[i] = bin.charCodeAt(i);
+                }
+                const blob = new Blob([bytes], { type: item.type });
+                return {
+                    name: item.name,
+                    type: item.type,
+                    data: item.data,
+                    url: URL.createObjectURL(blob)
+                };
+            });
+        }
+    }
 
     const uploadConfig = {
         activities: { label: 'Activity' },
@@ -88,19 +136,34 @@ function initUpload() {
     }
 
     function storeFiles(key, files) {
-        if (!pendingFiles[key]) {
-            pendingFiles[key] = [];
+        const fileList = Array.from(files).filter(function(file) {
+            return isAllowedType(file.type);
+        });
+        if (fileList.length === 0) {
+            return;
         }
-        for (const file of files) {
-            if (!isAllowedType(file.type)) {
-                continue;
-            }
-            pendingFiles[key].push({
-                name: file.name,
-                url: URL.createObjectURL(file),
-                type: file.type
-            });
-        }
+        let remaining = fileList.length;
+        fileList.forEach(function(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const data = e.target.result.split(',')[1];
+                if (!pendingFiles[key]) {
+                    pendingFiles[key] = [];
+                }
+                pendingFiles[key].push({
+                    name: file.name,
+                    type: file.type,
+                    data: data,
+                    url: URL.createObjectURL(file)
+                });
+                remaining--;
+                if (remaining === 0) {
+                    persistFiles();
+                    renderUpload(key);
+                }
+            };
+            reader.readAsDataURL(file);
+        });
     }
 
     function wireMulti(input, key) {
@@ -141,7 +204,7 @@ function initUpload() {
             fileBtn.innerHTML = '<span class="ti ' + fileIconClass(item.type) + ' up-item-icon"></span><span class="up-item-name"></span>';
             fileBtn.querySelector('.up-item-name').textContent = item.name;
             fileBtn.addEventListener('click', function() {
-                openPdf(item.name, item.url, item.type);
+                openStaticFile(item.url, item.name);
             });
 
             const delBtn = document.createElement('button');
@@ -151,6 +214,7 @@ function initUpload() {
             delBtn.innerHTML = '<span class="ti ti-x"></span>';
             delBtn.addEventListener('click', function() {
                 pendingFiles[key].splice(index, 1);
+                persistFiles();
                 renderUpload(key);
             });
 
@@ -195,6 +259,8 @@ function initUpload() {
     function renderUpload(key) {
         buildUploadSection(key);
     }
+
+    loadPersistedFiles();
 
     for (const key in uploadConfig) {
         buildUploadSection(key);
