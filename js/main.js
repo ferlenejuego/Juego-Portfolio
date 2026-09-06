@@ -50,7 +50,38 @@ function initMain() {
         navToggle.classList.toggle('active');
     });
 
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const lightboxClose = document.getElementById('lightboxClose');
+
+    function closeLightbox() {
+        lightbox.classList.remove('open');
+        lightboxImg.src = '';
+    }
+
+    document.querySelectorAll('[data-img]').forEach(function(anchor) {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            lightboxImg.src = anchor.getAttribute('href');
+            lightboxImg.alt = anchor.getAttribute('data-img');
+            lightbox.classList.add('open');
+        });
+    });
+
+    lightboxClose.addEventListener('click', closeLightbox);
+    lightbox.addEventListener('click', function(e) {
+        if (e.target === lightbox) {
+            closeLightbox();
+        }
+    });
+
     window.addEventListener('keydown', function(e) {
+        if (lightbox.classList.contains('open')) {
+            if (e.key === 'Escape') {
+                closeLightbox();
+            }
+            return;
+        }
         const index = slideIds.indexOf(currentSlide);
         if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === 'PageDown') {
             if (index < slideIds.length - 1) {
